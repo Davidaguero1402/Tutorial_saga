@@ -1,0 +1,27 @@
+services:
+  traefik:
+    image: traefik:v3.1
+    container_name: traefik_tp_ricardo
+    restart: always
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik.yml:/traefik.yml"
+      - "./certs:/etc/certs"
+    networks:
+      - tp_ricardo
+
+networks:
+  tp_ricardo:
+    external: true
