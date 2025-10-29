@@ -1,3 +1,4 @@
+# saga_orquestador/app/__init__.py
 from flask import Flask, jsonify
 import os
 from app.config import config

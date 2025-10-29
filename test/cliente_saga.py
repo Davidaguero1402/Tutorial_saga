@@ -1,6 +1,6 @@
 import requests
 
-url = "http://localhost:5000/saga"
+url = "http://localhost:5000/saga/"
 
 # --- Caso 1: Ejecución exitosa ---
 print("---- SAGA EXITOSA ----")

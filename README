@@ -1,0 +1,125 @@
+# Tutorial Patrón SAGA con Traefik
+
+## Descripción
+Este proyecto es un ejemplo genérico de cómo implementar el **Patrón SAGA** en un entorno de microservicios utilizando **Flask** y gestionando el tráfico con **Traefik**. Incluye ejemplos de ejecución de sagas exitosas y fallidas, mostrando cómo manejar compensaciones automáticamente.
+
+## Requisitos Previos
+Antes de comenzar, asegúrate de tener instalados los siguientes componentes:
+
+- Python 3.10+
+- Docker y Docker Compose
+- Traefik configurado como reverse proxy
+- Requests (`pip install requests`)
+- Postman o herramienta similar para probar endpoints (opcional)
+
+## Características
+
+- Implementación del Patrón SAGA
+
+- Integración con Traefik como reverse proxy
+
+- Ejemplos de ejecución exitosa y fallida
+
+- Manejo de compensaciones automáticas en caso de error
+
+## 1. Instalación
+
+Clona el repositorio:
+```bash
+git clone "https://github.com/Davidaguero1402/Tutorial_saga.git"
+cd tu_repositorio
+```
+
+## 2.Levanta Traefik:
+```bash
+cd .\traefik\
+docker compose up --build  
+```
+
+## 3. Levanta los microservicios
+Antes de ejecutar el comando debemos revisar el .env y asegurarnos que para este ejemplo la variable de entorno "ENVIRONMENT" sea igual a "TRAEFIK"
+```bash
+cd ..
+docker compose up --build  
+```
+## 4. Test del patron saga en Traefik 
+
+```bash
+python test/cliente_saga_traefik.py
+```
+## 5. Resultado esperado
+
+```bash
+---- ✅ SAGA EXITOSA ----
+Status: 200
+Texto de respuesta:
+{
+  "status": "OK"
+}
+---- ❌ SAGA FALLIDA ----
+Status: 500
+Texto de respuesta:
+{
+  "error": "Error en MS2, compensando acciones previas..."
+}
+```
+
+
+
+---
+## Crea y activa un entorno virtual:
+
+```python
+python -m venv .venv
+source .venv/bin/activate  # Linux / macOS
+.venv\Scripts\activate     # Windows
+```
+
+## Instala dependencias:
+
+```bash
+pip install -r requirements.txt
+```
+
+
+## 📁 Estructura del Proyecto
+```
+Tutorial_saga/
+│
+├── ms_uno/
+│   ├── app/
+│   │   ├── config/              # Config del microservicio 1
+│   │   └── resource/            # Endpoints del microservicio 1
+│   ├── .venv/                   # Entorno virtual aislado
+│   ├── main.py                  # Punto de entrada del microservicio
+│   ├── requirements.txt
+│   └── Dockerfile
+│
+├── ms_dos/
+│   ├── app/
+│   │   ├── config/              # Config del microservicio 2
+│   │   └── resource/            # Endpoints del microservicio 2
+│   ├── .venv/
+│   ├── main.py
+│   ├── requirements.txt
+│   └── Dockerfile
+│
+├── saga_orquestador/
+│   ├── app/
+│   │   ├── config/
+│   │   ├── resource/
+│   │   └── saga_router.py       # Lógica central del patrón Saga
+│   ├── .venv/
+│   ├── main.py
+│   ├── requirements.txt
+│   └── Dockerfile
+│
+├── traefik/
+│   ├── traefik.yml              # Configuración principal de Traefik
+│   ├── dynamic_conf.yml         # Configuración dinámica de rutas y middlewares
+│   ├── acme.json                # Certificados SSL (si aplica)
+│   └── Dockerfile (opcional)
+│
+├── docker-compose.yml           # Orquestación general (Traefik + microservicios)
+└── README.md
+```

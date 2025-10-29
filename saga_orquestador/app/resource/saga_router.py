@@ -1,16 +1,12 @@
-from flask import jsonify, request,Blueprint
-from saga import SagaBuilder, SagaError
-import requests
+# saga_router.py
 import logging
+from saga import SagaBuilder, SagaError
+from flask import jsonify, request,Blueprint
 from app.services.saga_services import AccionesMicroservicios
-
-MS_UNO = "http://localhost:5001"
-MS_DOS = "http://localhost:5002"
 
 logging.basicConfig(level=logging.INFO)
 
 saga_bp = Blueprint('saga', __name__)
-
 
 @saga_bp.route("/", methods=["POST"])
 def ejecutar_saga():
