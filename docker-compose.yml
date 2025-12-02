@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  ms_uno:
+    build: ./ms_uno
+    container_name: ms_uno
+    networks:
+      - saga_tutorial
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ms_uno.rule=PathPrefix(`/ms_uno`)"
+      - "traefik.http.services.ms_uno.loadbalancer.server.port=5001"
+
+  ms_dos:
+    build: ./ms_dos
+    container_name: ms_dos
+    networks:
+      - saga_tutorial
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ms_dos.rule=PathPrefix(`/ms_dos`)"
+      - "traefik.http.services.ms_dos.loadbalancer.server.port=5002"
+
+  saga_orquestador:
+    build: ./saga_orquestador
+    container_name: saga_orquestador
+    networks:
+      - saga_tutorial
+    env_file:
+      - ./saga_orquestador/.env
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.saga.rule=PathPrefix(`/saga`)"
+      - "traefik.http.services.saga.loadbalancer.server.port=5000"
+
+networks:
+  saga_tutorial:
+    external: true

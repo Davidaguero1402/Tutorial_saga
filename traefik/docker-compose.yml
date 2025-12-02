@@ -1,0 +1,24 @@
+services:
+  traefik:
+    image: traefik:v3.1
+    container_name: traefik_tutorial
+    restart: always
+    command:
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.network=saga_tutorial"   # 👈 importante
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - saga_tutorial
+
+networks:
+  saga_tutorial:
+    external: true
